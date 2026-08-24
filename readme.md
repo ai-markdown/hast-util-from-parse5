@@ -1,5 +1,23 @@
 # hast-util-from-parse5
 
+<!-- fork banner -->
+
+> **Fork notice** — this is `@ai-markdown/hast-util-from-parse5`, a fork of
+> [`hast-util-from-parse5`][upstream-repo] at 8.0.3 carrying one fix:
+> a `<template>` inside foreign content (`<svg>`, `<math>`) no longer
+> crashes the conversion. Upstream reads `.content` on every element named
+> `template`, but parse5 — per the HTML spec — only sets template contents
+> on an HTML-namespace template, so `<svg><template>x</template>` threw
+> `TypeError: Cannot read properties of undefined (reading 'nodeName')`
+> through every HTML→hast path (`hast-util-raw`, `hast-util-from-html`,
+> `rehype-parse`).
+>
+> Usage is identical to upstream — only the package name changes. When the
+> fix lands upstream, this fork will be deprecated in favour of it.
+>
+> [upstream-repo]: https://github.com/syntax-tree/hast-util-from-parse5
+
+
 [![Build][badge-build-image]][badge-build-url]
 [![Coverage][badge-coverage-image]][badge-coverage-url]
 [![Downloads][badge-downloads-image]][badge-downloads-url]

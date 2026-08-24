@@ -1,0 +1,41 @@
+name: Release
+
+# Publishes to npm with provenance when a version tag (v*) is pushed.
+# Auth is npm trusted publishing (OIDC): this repo+workflow must be
+# registered as a trusted publisher for the package on npmjs.com. The
+# FIRST publish may need to be done manually by a maintainer (npm does
+# not let you register a trusted publisher for a package that does not
+# exist yet); every publish after that is tag-driven.
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write # create the GitHub release
+  id-token: write # OIDC for npm trusted publishing + provenance
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          registry-url: 'https://registry.npmjs.org'
+      - name: Verify tag matches package.json
+        run: |
+          TAG="${GITHUB_REF_NAME#v}"
+          PKG="$(node -p "require('./package.json').version")"
+          [ "$TAG" = "$PKG" ] || { echo "tag $TAG != package.json $PKG"; exit 1; }
+      - run: npm ci
+      - name: Test
+        run: node --conditions development test/index.js
+      - name: Publish
+        run: npm publish
+      - name: GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" --generate-notes --verify-tag

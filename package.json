@@ -1,6 +1,6 @@
 {
   "author": "Titus Wormer <tituswormer@gmail.com> (https://wooorm.com)",
-  "bugs": "https://github.com/syntax-tree/hast-util-from-parse5/issues",
+  "bugs": "https://github.com/ai-markdown/hast-util-from-parse5/issues",
   "contributors": [
     "Titus Wormer <tituswormer@gmail.com> (https://wooorm.com)"
   ],
@@ -50,7 +50,7 @@
     "util"
   ],
   "license": "MIT",
-  "name": "hast-util-from-parse5",
+  "name": "@ai-markdown/hast-util-from-parse5",
   "prettier": {
     "bracketSpacing": false,
     "semi": false,
@@ -64,7 +64,7 @@
       "remark-preset-wooorm"
     ]
   },
-  "repository": "syntax-tree/hast-util-from-parse5",
+  "repository": "ai-markdown/hast-util-from-parse5",
   "scripts": {
     "build": "tsc --build --clean && tsc --build && type-coverage",
     "format": "remark --frail --quiet --output -- . && prettier --log-level warn --write -- . && xo --fix",
@@ -78,7 +78,7 @@
     "strict": true
   },
   "type": "module",
-  "version": "8.0.3",
+  "version": "8.0.4",
   "xo": {
     "overrides": [
       {
@@ -116,5 +116,10 @@
       "max-depth": "off",
       "unicorn/prefer-at": "off"
     }
+  },
+  "homepage": "https://github.com/ai-markdown/hast-util-from-parse5#readme",
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
   }
 }
