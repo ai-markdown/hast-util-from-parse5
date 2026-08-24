@@ -119,7 +119,6 @@
   },
   "homepage": "https://github.com/ai-markdown/hast-util-from-parse5#readme",
   "publishConfig": {
-    "access": "public",
-    "provenance": true
+    "access": "public"
   }
 }
