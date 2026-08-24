@@ -1,5 +1,5 @@
 /**
- * @import {Nodes} from 'hast'
+ * @import {Element, Nodes, Root} from 'hast'
  * @import {html as Html} from 'parse5'
  * @import {VFile} from 'vfile'
  */
@@ -24,7 +24,7 @@ test('fromParse5', async function (t) {
 
   await t.test('should expose the public api', async function () {
     assert.deepEqual(
-      Object.keys(await import('hast-util-from-parse5')).sort(),
+      Object.keys(await import('@ai-markdown/hast-util-from-parse5')).sort(),
       ['fromParse5']
     )
   })
@@ -445,7 +445,7 @@ test('template in foreign content', async function (t) {
       assert.equal(template.tagName, 'template')
       assert.equal(template.children.length, 0)
       assert.equal(template.content !== undefined, true)
-      assert.equal(template.content.children.length, 1)
+      assert.equal(template.content ? template.content.children.length : 0, 1)
     }
   )
 
