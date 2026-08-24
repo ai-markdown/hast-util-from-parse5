@@ -1,5 +1,5 @@
 /**
- * @import {Nodes} from 'hast'
+ * @import {Element, Nodes, Root} from 'hast'
  * @import {html as Html} from 'parse5'
  * @import {VFile} from 'vfile'
  */
@@ -398,3 +398,65 @@ function clean(tree) {
     }
   })
 }
+
+test('template in foreign content', async function (t) {
+  await t.test(
+    'should not crash on a `<template>` inside `<svg>`',
+    async function () {
+      const tree = fromParse5(
+        parseFragment('<svg><template>x</template></svg>')
+      )
+      assert.equal(tree.type, 'root')
+    }
+  )
+
+  await t.test(
+    'should not crash on a `<template>` inside `<math>`',
+    async function () {
+      const tree = fromParse5(
+        parseFragment('<math><template>x</template></math>')
+      )
+      assert.equal(tree.type, 'root')
+    }
+  )
+
+  await t.test(
+    'should not crash on an unclosed `<template>` inside `<svg>`',
+    async function () {
+      const tree = fromParse5(parseFragment('<svg><template>'))
+      assert.equal(tree.type, 'root')
+    }
+  )
+
+  await t.test(
+    'should normalize a foreign template’s children into `content`',
+    async function () {
+      // parse5 keeps a foreign template’s children in `childNodes` (no
+      // template contents outside the HTML namespace), but hastscript
+      // normalizes any hast `template` element to carry its children on
+      // `content` — so the converted shape matches the HTML form.
+      const tree = /** @type {Root} */ (
+        fromParse5(parseFragment('<svg><template>x</template></svg>'))
+      )
+      const svg = /** @type {Element} */ (tree.children[0])
+      const template = /** @type {Element} */ (svg.children[0])
+      assert.equal(template.tagName, 'template')
+      assert.equal(template.children.length, 0)
+      assert.equal(template.content !== undefined, true)
+      assert.equal(template.content ? template.content.children.length : 0, 1)
+    }
+  )
+
+  await t.test(
+    'should keep HTML template contents on `.content`',
+    async function () {
+      const tree = /** @type {Root} */ (
+        fromParse5(parseFragment('<template>x</template>'))
+      )
+      const template = /** @type {Element} */ (tree.children[0])
+      assert.equal(template.tagName, 'template')
+      assert.equal(template.content !== undefined, true)
+      assert.equal(template.children.length, 0)
+    }
+  )
+})
